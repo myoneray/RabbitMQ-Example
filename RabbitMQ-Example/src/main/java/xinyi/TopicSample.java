@@ -11,8 +11,9 @@ import java.util.Random;
  * 表示一个单词。＃表示0到多个单词。<br />
  * ＃形似的routingKey表现类似fanout<br />
  * routingKey中无通配符，则和direct exchange表现相同。<br />
+ * 类似于正则表达式的方式去指定消息流的方向
  * 
- * @author upsmart
+ * @author MYONERAY
  *
  */
 public class TopicSample {
@@ -60,7 +61,6 @@ public class TopicSample {
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
-
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
         String[] keys = new String[] { "aa.bb.cc", "xx.yy.zz", "ss.mm" };
 

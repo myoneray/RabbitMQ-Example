@@ -3,30 +3,27 @@ package xinyi;
 import java.io.IOException;
 
 import com.rabbitmq.client.*;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.MessageProperties;
+
 /**
  * 分发模式
- * @author upsmart
+ * 
+ * @author MYONERAY
  *
  */
 public class WorkQueuesSample {
+    private int temp = 10;
 
     public static void main(String[] args) throws Exception {
         new WorkQueuesSample().test();
     }
 
-    private static final String TASK_QUEUE_NAME = "task_queue";
-
     public void test() throws Exception {
         new Thread() {
             @Override
             public void run() {
-                System.out.println("sending message...");
                 try {
                     send();
+                    System.out.println("----------------------------------------------------");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -38,9 +35,8 @@ public class WorkQueuesSample {
         new Thread() {
             @Override
             public void run() {
-                System.out.println("recieving message...");
                 try {
-                    worker("W1");
+                    worker("分发模式线程A");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -50,9 +46,8 @@ public class WorkQueuesSample {
         new Thread() {
             @Override
             public void run() {
-                System.out.println("recieving message...");
                 try {
-                    worker("W2");
+                    worker("分发模式线程B");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -69,17 +64,12 @@ public class WorkQueuesSample {
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
-
-        // queueDeclare(queue, durable, exclusive, autoDelete,
-        // Map<String,Object> args)
-        // Declare a queue
-        channel.queueDeclare(TASK_QUEUE_NAME, true/* durable */, false, false, null);
-
-        for (int i = 0; i < 4; i++) {
-            String m = "message-" + i + "-" + System.currentTimeMillis();
-            channel.basicPublish("", TASK_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, m.getBytes());
-            System.out.println(" 发送： '" + m + "'");
-
+        channel.queueDelete("task_queue");
+        channel.queueDeclare("task_queue", true, false, false, null);
+        for (int i = 0; i < temp; i++) {
+            String m = i + ">TestMessage";
+            channel.basicPublish("", "task_queue", MessageProperties.PERSISTENT_TEXT_PLAIN, m.getBytes());
+            System.out.println(" [分发模式发送消息] ： '" + m + "'");
         }
 
         channel.close();
@@ -95,10 +85,13 @@ public class WorkQueuesSample {
 
         final Connection connection = factory.newConnection();
         final Channel channel = connection.createChannel();
-
-        channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
-        // basicQos(int prefetchCount)
-        channel.basicQos(2);
+        channel.queueDeclare("task_queue", true, false, false, null);
+        /**
+         * 意思为，最多为当前接收方发送5条消息。<br />
+         * 如果接收方还未处理完毕消息，还没有回发确认，就不要再给他分配消息了，<br />
+         * 应该把当前消息分配给其它空闲接收方。
+         */
+        channel.basicQos(5);
 
         final Consumer consumer = new DefaultConsumer(channel) {
             @Override
@@ -108,7 +101,10 @@ public class WorkQueuesSample {
                 System.out.println(" [" + name + "] 接收：" + message + "'");
             }
         };
-        channel.basicConsume(TASK_QUEUE_NAME, false/* autoAck */, consumer);
+        // 自动删除消息
+        // channel.basicConsume("task_queue", true, consumer);
+        // 需要接受方发送ack回执,删除消息
+        channel.basicConsume("task_queue", false, consumer);
     }
 
 }

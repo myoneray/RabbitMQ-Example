@@ -9,18 +9,20 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
 
 import java.io.IOException;
-
+/**
+ * 基本接收 
+ * @author MYONERAY
+ *
+ */
 public class BasicSendRecvTest {
     public static void main(String[] args) throws Exception {
         BasicSendRecvTest.test();
     }
-    private final static String QUEUE_NAME = "hello";
 
     public static void test() throws Exception {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
-                System.out.println("sending message...");
                 try {
                     send();
                 } catch (Exception ex) {
@@ -28,13 +30,10 @@ public class BasicSendRecvTest {
                 }
             }
         }.start();
-
         Thread.currentThread().sleep(1000);
-
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
-                System.out.println("recieving message...");
                 try {
                     recieve();
                 } catch (Exception ex) {
@@ -52,10 +51,11 @@ public class BasicSendRecvTest {
         factory.setPassword("516185423");
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        channel.queueDeclare("HELLO", false, false, false, null);
         String message = "Hello World!";
-        channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-        System.out.println(" [x] Sent '" + message + "'");
+        channel.basicPublish("", "HELLO", null, message.getBytes());
+        System.out.println(" [基本发送] ＞" + message);
         channel.close();
         connection.close();
     }
@@ -69,20 +69,16 @@ public class BasicSendRecvTest {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-
+        channel.queueDeclare("HELLO", false, false, false, null);
         Consumer consumer = new DefaultConsumer(channel) {
-                @Override
-                public void handleDelivery(String consumerTag, Envelope envelope,
-                                           AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    String message = new String(body, "UTF-8");
-                    System.out.println(" [x] Received '" + message + "'");
-                }
-            };
-
-        channel.basicConsume(QUEUE_NAME, true, consumer);
-
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+                    byte[] body) throws IOException {
+                String message = new String(body, "UTF-8");
+                System.out.println(" [基本接收] ＞" + message);
+            }
+        };
+        channel.basicConsume("HELLO", true, consumer);
         // channel.close();
         // connection.close();
     }

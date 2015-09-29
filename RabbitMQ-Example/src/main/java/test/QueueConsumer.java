@@ -1,3 +1,4 @@
+package test;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,9 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
 
 /**
- * 读取队列的程序端，实现了Runnable接口。
+ * 读取队列的程序端，实现了Runnable接口。 <br />
+ * 消费者可以以线程方式运行，对于不同的事件有不同的回调函数，<br />
+ * 其中最主要的是处理新消息到来的事件。
  * 
  * @author syntx
  *

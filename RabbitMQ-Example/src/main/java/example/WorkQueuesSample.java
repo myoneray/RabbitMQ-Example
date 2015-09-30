@@ -1,4 +1,4 @@
-package xinyi;
+package example;
 
 import java.io.IOException;
 

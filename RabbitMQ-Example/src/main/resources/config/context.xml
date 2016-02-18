@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+  xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans  
+                http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/context  
+                http://www.springframework.org/schema/context/spring-context.xsd  
+            http://www.springframework.org/schema/rabbit  
+                http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+  <!-- 消费者配置Consumer.xml -->
+  <!-- 连接服务配置 -->
+  
+  <rabbit:connection-factory id="connectionFactory" host="localhost" username="xinyi"
+    password="516185423" port="5672" virtual-host="upsmart" channel-cache-size="5" />
+
+  <rabbit:admin connection-factory="connectionFactory" />
+
+  <!-- queue 队列声明 -->
+  <rabbit:queue durable="true" auto-delete="false" exclusive="false" name="spring.queue.tag" />
+
+  <!-- exchange queue binging key 绑定 -->
+  <rabbit:direct-exchange name="spring.queue.exchange" durable="true" auto-delete="false">
+    <rabbit:bindings>
+      <rabbit:binding queue="spring.queue.tag" key="spring.queue.tag.key" />
+    </rabbit:bindings>
+  </rabbit:direct-exchange>
+
+  <bean id="receiveMessageListener" class="me.myone.spring.rabbitmq.test.ReceiveMessageListener" />
+
+  <!-- queue litener 观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象 -->
+  <rabbit:listener-container connection-factory="connectionFactory" acknowledge="auto">
+    <rabbit:listener queues="spring.queue.tag" ref="receiveMessageListener" />
+  </rabbit:listener-container>
+</beans>  

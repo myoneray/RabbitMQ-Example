@@ -7,6 +7,17 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>RabbitMQ-Example Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+
+
+  <properties>
+    <slf4j.version>1.7.5</slf4j.version>
+    <log4j.version>1.2.17</log4j.version>
+    <spring-data-jpa.version>1.3.4.RELEASE</spring-data-jpa.version>
+    <spring-data-redis.version>1.3.2.RELEASE</spring-data-redis.version>
+    <spring-framework.version>3.2.11.RELEASE</spring-framework.version>
+    <spring-amqp.version>1.1.4.RELEASE</spring-amqp.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -17,32 +28,62 @@
 
     <!-- for rabbitmq -->
 
+    <!-- <dependency> -->
+    <!-- <groupId>com.rabbitmq</groupId> -->
+    <!-- <artifactId>amqp-client</artifactId> -->
+    <!-- <version>3.0.4</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>commons-lang</groupId> -->
+    <!-- <artifactId>commons-lang</artifactId> -->
+    <!-- <version>2.6</version> -->
+    <!-- </dependency> -->
+
+    <!--sl4j & log4j -->
     <dependency>
-      <groupId>com.rabbitmq</groupId>
-      <artifactId>amqp-client</artifactId>
-      <version>3.0.4</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.json-lib</groupId>
+      <artifactId>json-lib</artifactId>
+      <version>2.4</version>
+      <classifier>jdk15</classifier>
+    </dependency>
+
+    <!-- spring-rabbit rabbitmq -->
     <!-- <dependency> -->
-    <!-- <groupId>org.springframework.amqp</groupId> -->
-    <!-- <artifactId>spring-amqp</artifactId> -->
-    <!-- <version>1.1.1.RELEASE</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.springframework.amqp</groupId> -->
-    <!-- <artifactId>spring-rabbit</artifactId> -->
-    <!-- <version>1.1.1.RELEASE</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>com.caucho</groupId> -->
-    <!-- <artifactId>hessian</artifactId> -->
-    <!-- <version>4.0.7</version> -->
+    <!-- <groupId>com.rabbitmq</groupId> -->
+    <!-- <artifactId>amqp-client</artifactId> -->
+    <!-- <version>3.5.1</version> -->
     <!-- </dependency> -->
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
+      <groupId>org.springframework.amqp</groupId>
+      <artifactId>spring-rabbit</artifactId>
+      <version>1.5.4.RELEASE</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+
   </dependencies>
+
   <build>
     <finalName>RabbitMQ-Example</finalName>
   </build>

@@ -11,3 +11,4 @@
 5.重置RabbitMQ节点 
 # rabbitmqctl reset 
 # rabbitmqctl force_reset 
+###　訪問URL: http://localhost:15672/

@@ -1,4 +1,4 @@
-package me.myone.spring.rabbitmq.test;
+package me.myone.spring.rabbitmq.test.simple.gson;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,6 +11,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class ConsumerMain {
     public static void main(String[] args) {
-        new ClassPathXmlApplicationContext("config/context.xml");
+        new ClassPathXmlApplicationContext("gsonConfig/context.xml");
     }
 }

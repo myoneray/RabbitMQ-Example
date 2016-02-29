@@ -1,4 +1,4 @@
-package me.myone.spring.rabbitmq.test;
+package me.myone.spring.rabbitmq.test.simple.gson;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;

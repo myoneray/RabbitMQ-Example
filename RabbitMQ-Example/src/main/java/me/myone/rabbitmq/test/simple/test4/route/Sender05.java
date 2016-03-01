@@ -34,7 +34,7 @@ public class Sender05 {
          * msg.getBytes());
          */
         // 发送消息
-        String messageType = "type03";
+        String messageType = "type02";
         channel.basicPublish(exchangeName, messageType, null, "Maizi".getBytes());
         System.out.println("send success!");
         channel.close();
